@@ -1,3 +1,4 @@
+
 /*jshint eqnull:true, expr:true*/
 
 var _ = { };
@@ -16,16 +17,52 @@ var _ = { };
   // Return an array of the first n elements of an array. If n is undefined,
   // return just the first element.
   _.first = function(array, n) {
+    if(n === undefined)
+      n = 1;
+
+    if(Array.isArray(array)){
+      if(n === 1)
+        return array[0];
+      else 
+        return array.slice(0, n);
+
+    }
+
   };
 
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
+    var temp = [];
+    if(n === undefined)
+      n = 1;
+
+    if(Array.isArray(array)){
+      if(n === 1)
+        return array[array.length - 1];
+      else if(n > array.length)
+        return array;
+      else{
+        for(var i = array.length - n; i < array.length; i++){
+          temp.push(array[i]);
+        } 
+        return temp;
+      }
+    }
   };
 
   // Call iterator(value, key, collection) for each element of collection.
   // Accepts both arrays and objects.
   _.each = function(collection, iterator) {
+    if(Array.isArray(collection)){
+      for(var i = 0; i < collection.length; i++)
+        iterator(collection[i], i, collection);
+    }
+    else{
+      for (key in collection)
+        iterator(collection[key], key, collection);
+    }
+
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
