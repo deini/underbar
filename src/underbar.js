@@ -68,6 +68,15 @@ var _ = { };
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
   _.indexOf = function(array, target){
+    var result = -1;
+    _.each(array, function(value, index, arr){
+      if (value === target){
+        if(result === -1)
+          result = index;
+    }
+    });
+    return result;
+
     // TIP: Here's an example of a function that needs to iterate, which we've
     // implemented for you. Instead of using a standard `for` loop, though,
     // it uses the iteration helper `each`, which you will need to write.
