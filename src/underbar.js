@@ -70,10 +70,9 @@ var _ = { };
   _.indexOf = function(array, target){
     var result = -1;
     _.each(array, function(value, index, arr){
-      if (value === target){
-        if(result === -1)
-          result = index;
-    }
+      if (value === target && result === -1){
+        result = index;
+      }
     });
     return result;
 
