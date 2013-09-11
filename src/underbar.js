@@ -106,6 +106,14 @@ var _ = { };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    var result = [];
+    _.each(array, function(value, index, arr){
+      if(_.indexOf(result, value) === -1)
+        result.push(value);
+
+    });
+    return result;
+
   };
 
 
