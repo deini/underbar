@@ -127,7 +127,7 @@ var _ = { };
       result.push(iterator(value));
     });
     return result;
-    
+
   };
 
   /*
@@ -150,6 +150,20 @@ var _ = { };
 
   // Calls the method named by methodName on each value in the list.
   _.invoke = function(list, methodName, args) {
+    var isFunc = false;
+
+    if(typeof methodName === "function")
+      isFunc = true;
+    
+    return _.map(list, function(value){
+      if (isFunc)
+        methodName.apply(value, args);
+      else
+        value[methodName](args);
+      
+      return value;
+    });
+    
   };
 
   // Reduces an array or object to a single value by repetitively calling
