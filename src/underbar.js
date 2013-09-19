@@ -313,6 +313,27 @@ var _ = { };
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var alreadyCalled = {};
+
+    return function(arg1){
+      if(!(_.contains(_.keys(alreadyCalled), arg1.toString()))){
+        alreadyCalled[arg1] = func(arg1);
+      }
+      return alreadyCalled[arg1];
+
+
+    }
+
+
+  };
+
+  //Return all keys of an object as an array.
+  _.keys = function(obj){
+    var keysList = [];
+    for(var key in obj)
+      keysList.push(key);
+    return keysList;
+
   };
 
   // Delays a function for the given number of milliseconds, and then calls
