@@ -359,6 +359,17 @@ var _ = { };
 
   // Shuffle an array.
   _.shuffle = function(array) {
+    var clone = array.slice(0);
+    var result = [];
+
+    _.each(array, function(value, index, collection){
+      var temp = Math.floor(Math.random()*clone.length);
+      result.push(clone[temp]);
+      clone.splice(temp, 1);
+    });
+
+    return result;
+      
   };
 
 
