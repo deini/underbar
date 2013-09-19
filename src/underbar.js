@@ -259,6 +259,7 @@ var _ = { };
         obj[key] = arguments[i][key];
       }
     } 
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
@@ -270,6 +271,7 @@ var _ = { };
           obj[key] = arguments[i][key];
       }
     } 
+    return obj;
   
   };
 
