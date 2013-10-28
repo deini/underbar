@@ -49,6 +49,17 @@ var _ = { };
     // TIP: Here's an example of a function that needs to iterate, which we've
     // implemented for you. Instead of using a standard `for` loop, though,
     // it uses the iteration helper `each`, which you will need to write.
+    var matchIndex = -1;
+
+    _.each(array, function(item, index) {
+      if(item === target && matchIndex === -1) {
+        matchIndex = index;
+      }
+    });
+    return matchIndex; 
+    // This implementation makes N iterations even if a match
+    // is found in the first index. A simple for loop with a break
+    // is more optimal.
   };
 
   // Return all elements of an array that pass a truth test.
