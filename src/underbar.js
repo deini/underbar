@@ -51,8 +51,8 @@ var _ = { };
     // it uses the iteration helper `each`, which you will need to write.
     var matchIndex = -1;
 
-    _.each(array, function(item, index) {
-      if(item === target && matchIndex === -1) {
+    _.each(array, function(value, index) {
+      if(value === target && matchIndex === -1) {
         matchIndex = index;
       }
     });
@@ -64,6 +64,13 @@ var _ = { };
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, iterator) {
+    var newArray = [];
+    _.each(collection, function(value) {
+      if(iterator(value)) {
+        newArray.push(value);
+      }
+    });
+    return newArray;
   };
 
   // Return all elements of an array that don't pass a truth test.
