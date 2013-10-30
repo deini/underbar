@@ -123,7 +123,7 @@ var _ = { };
   // Calls the method named by methodName on each value in the list.
   _.invoke = function(list, methodName, args) {
     return _.map(list, function(value) {
-      return (typeof(methodName) === 'function' ? methodName.apply(value, args) : value[methodName]).call(value, args);
+      return (typeof(methodName) === 'function' ? methodName : value[methodName]).call(value, args);
     });
   };
 
