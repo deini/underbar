@@ -182,8 +182,15 @@ var _ = { };
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    if(iterator === undefined) {
+      iterator = function(item) {
+        return item
+      };
+    }
+    return !_.every(collection, function(item) {
+      return !Boolean(iterator(item));
+    });
   };
-
 
   /**
    * OBJECTS
@@ -204,11 +211,30 @@ var _ = { };
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    if(obj === undefined) {
+      obj = {};
+    }
+    _.each(arguments, function(item) {
+      for(var i in item) {
+        obj[i] = item[i];
+      }
+    });
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    if(obj === undefined) {
+      obj = {};
+    }
+    _.each(arguments, function(item) {
+      for(var i in item) {
+        if(obj[i] === undefined) {
+          obj[i] = item[i];
+        }
+      }
+    });
   };
 
 
