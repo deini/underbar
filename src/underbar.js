@@ -1,6 +1,6 @@
 /*jshint eqnull:true, expr:true*/
 
-var _ = { };
+var _ = {};
 
 (function() {
 
@@ -384,6 +384,43 @@ var _ = { };
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+    var funct = iterator;
+    if(typeof iterator === "string"){
+      funct = function(obj){
+        return obj[iterator];
+      };
+    }
+
+    var iteratorResults = [];
+    iteratorResults = collection.map(function(element, index){
+      return {
+        index: index, 
+        //element: element.y,
+        sortValue: funct(element)
+      };
+    });
+    console.table(iteratorResults);
+
+    iteratorResults.sort(function(a,b){
+      if(a.sortValue === b.sortValue){
+        return 0;
+      }
+      if (typeof a.sortValue === "undefined"){
+        return 1;
+      }
+      if (typeof b.sortValue === "undefined"){
+        return -1;
+      }
+      return a.sortValue > b.sortValue ? 1 : -1;
+    });
+
+    console.table(iteratorResults);
+    //console.log(JSON.stringify(iteratorResults));
+
+    return iteratorResults.map(function(element){
+      return collection[element.index];
+    });
+
   };
 
   // Zip together two or more arrays with elements of the same index
