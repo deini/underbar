@@ -395,27 +395,20 @@ var _ = {};
     iteratorResults = collection.map(function(element, index){
       return {
         index: index, 
-        //element: element.y,
         sortValue: funct(element)
       };
     });
-    console.table(iteratorResults);
 
     iteratorResults.sort(function(a,b){
       if(a.sortValue === b.sortValue){
-        return 0;
+        return a.index > b.index ? 1 : -1;
       }
-      if (typeof a.sortValue === "undefined"){
+      if (typeof a.sortValue === "undefined")
         return 1;
-      }
-      if (typeof b.sortValue === "undefined"){
+      if (typeof b.sortValue === "undefined")
         return -1;
-      }
       return a.sortValue > b.sortValue ? 1 : -1;
     });
-
-    console.table(iteratorResults);
-    //console.log(JSON.stringify(iteratorResults));
 
     return iteratorResults.map(function(element){
       return collection[element.index];
