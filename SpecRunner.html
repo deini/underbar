@@ -5,13 +5,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="lib/css/mocha.css" />
     <script src="lib/jquery.js"></script>
+    <script src="lib/picomodal.js"></script>
+    <script src="lib/tweetit.js"></script>
     <script src="lib/expect.js"></script>
     <script src="lib/mocha.js"></script>
     <script src="lib/sinon.js"></script>
 
     <script>
       // Tell mocha to use bdd-style expects
-      mocha.setup('bdd')
+      mocha.setup('bdd');
     </script>
 
     <!-- Load tests and helpers here -->
@@ -21,7 +23,12 @@
     <script>
       // Mocha expects a global onload var here and automagically executes it on pageload
       onload = function(){
-        mocha.run();
+        var runner = window.mochaPhantomJS ? mochaPhantomJS.run() : mocha.run();
+        runner.on('end', function() {
+          if(!this.failures){
+            window.tweetit();
+          }
+        });
       };
     </script>
   </head>
