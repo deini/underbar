@@ -4,6 +4,10 @@ var _ = { };
 
 (function() {
 
+  _.identity = function(val) {
+    return val;
+  };
+
   /**
    * COLLECTIONS
    * ===========
@@ -121,9 +125,10 @@ var _ = { };
   };
 
   // Calls the method named by methodName on each value in the list.
+  // Note: you will need to learn a bit about .apply to complete this.
   _.invoke = function(list, methodName, args) {
     return _.map(list, function(value) {
-      return (typeof(methodName) === 'function' ? methodName : value[methodName]).call(value, args);
+      return (typeof(methodName) === 'function' ? methodName : value[methodName]).apply(value, args);
     });
   };
 
@@ -140,15 +145,14 @@ var _ = { };
   //     return total + number;
   //   }, 0); // should be 6
   //
-  _.reduce = function(collection, iterator, initialValue) {
-    var ret = 0;
-    if(initialValue) {
-      ret = initialValue
+  _.reduce = function(collection, iterator, accumulator) {
+    if(!accumulator) {
+      accumulator = 0;
     }
     _.each(collection, function(value) {
-      ret = iterator(ret, value);
+      accumulator = iterator(accumulator, value);
     });
-    return ret;
+    return accumulator;
   };
 
   // Determine if the array or object contains a given value (using `===`).
@@ -183,9 +187,7 @@ var _ = { };
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
     if(iterator === undefined) {
-      iterator = function(item) {
-        return item
-      };
+      iterator = _.identity;
     }
     return !_.every(collection, function(item) {
       return !Boolean(iterator(item));
@@ -211,7 +213,7 @@ var _ = { };
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
-    if(obj === undefined) {
+    if(!obj) {
       obj = {};
     }
     _.each(arguments, function(item) {
@@ -225,7 +227,7 @@ var _ = { };
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
-    if(obj === undefined) {
+    if(!obj) {
       obj = {};
     }
     _.each(arguments, function(item) {
@@ -235,6 +237,7 @@ var _ = { };
         }
       }
     });
+    return obj;
   };
 
 
@@ -278,10 +281,9 @@ var _ = { };
     var results = {};
 
     return function(key) {
-      if(results[key]) {
-        return results[key];
+      if(!results[key]) {
+        results[key] = func.apply(this, arguments);
       }
-      results[key] = func.apply(this, arguments);
       return results[key];
     }
   };
@@ -293,8 +295,7 @@ var _ = { };
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
-    var args = arguments;
-    return setTimeout.apply(this, args);
+    return setTimeout.apply(this, arguments);
   };
 
 
@@ -305,19 +306,19 @@ var _ = { };
 
   // Shuffle an array.
   _.shuffle = function(array) {
-    var length = array.length;
+    var shuffled = array.slice();
+    var len = shuffled.length;
     var temp;
     var index;
-    var ranArray = array.slice();
 
-    while(length--) {
-      index = (Math.random() * length) | 0;
+    while(len--) {
+      index = (Math.random() * len) | 0;
 
-      temp = ranArray[length];
-      ranArray[length] = ranArray[index];
-      ranArray[index] = temp;
+      temp = shuffled[len];
+      shuffled[len] = shuffled[index];
+      shuffled[index] = temp;
     }
-    return ranArray;
+    return shuffled;
   };
 
 
@@ -340,6 +341,16 @@ var _ = { };
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
   _.zip = function() {
+    // bugged, returning returns [['a',1], ['b',2], ['c',3], ['d']]
+    var results = [];
+    _.each(arguments, function(value) {
+      _.each(value, function(item, index) {
+        if(!results[index]) {
+          results[index] = [];
+        }
+        results[index].push(item);
+      });
+    });
   };
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
@@ -347,6 +358,17 @@ var _ = { };
   //
   // Hint: Use Array.isArray to check if something is an array
   _.flatten = function(nestedArray, result) {
+    if(!result) {
+      result = [];
+    }
+    _.each(nestedArray, function(value) {
+      if(Array.isArray(value)) {
+        _.flatten(value, result);
+      } else {
+        result.push(value);
+      }
+    });
+    return result;
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains
