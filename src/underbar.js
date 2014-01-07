@@ -200,7 +200,7 @@ var _ = {};
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
-    iterator = iterator || _.invoke;
+    iterator = iterator || _.identity;
     return _.reduce(collection, function(wasTrue, value){
       if(!wasTrue) {
         return false;
@@ -213,6 +213,10 @@ var _ = {};
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    iterator = iterator || _.identity;
+    return !_.every(collection, function(value){
+      return !iterator(value);
+    });
   };
 
 
@@ -235,11 +239,25 @@ var _ = {};
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    _.each(arguments, function(value){
+      for( var key in value ){
+        obj[key] = value[key];
+      }
+    });
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    _.each(arguments, function(value) {
+      for(var key in value) {
+        if(obj[key] === undefined) {
+          obj[key] = value[key];
+        }
+      }
+    });
+    return obj;
   };
 
 
@@ -281,6 +299,14 @@ var _ = {};
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var memory = {};
+    return function(arg){
+      if (memory[arg] !== undefined){
+        return memory[arg];
+      }
+      memory[arg] = func(arg);
+      return memory[arg];
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -290,6 +316,9 @@ var _ = {};
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    setTimeout(function(){
+      func.apply( this, Array.prototype.slice(arguments, 2));
+    }, wait);
   };
 
 
