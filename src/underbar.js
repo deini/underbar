@@ -173,13 +173,13 @@ var _ = {};
   //     return total + number;
   //   }, 0); // should be 6
   _.reduce = function(collection, iterator, accumulator) {
-    var copy = collection.slice();
-    accumulator = accumulator || copy.shift();
-
-    _.each(copy, function(value) {
+    // Bug with multiplications... ToDo
+    if(accumulator === undefined) {
+      accumulator = 0;
+    }
+    _.each(collection, function(value) {
       accumulator = iterator(accumulator, value);
     });
-
     return accumulator;
   };
 
@@ -191,6 +191,7 @@ var _ = {};
       if (wasFound) {
         return true;
       }
+      // console.log(item, target);
       return item === target;
     }, false);
   };
@@ -199,6 +200,13 @@ var _ = {};
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    iterator = iterator || _.invoke;
+    return _.reduce(collection, function(wasTrue, value){
+      if(!wasTrue) {
+        return false;
+      }
+      return Boolean(iterator(value));
+    }, true);
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
