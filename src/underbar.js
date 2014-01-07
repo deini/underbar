@@ -300,12 +300,13 @@ var _ = {};
   // instead if possible.
   _.memoize = function(func) {
     var memory = {};
-    return function(arg){
-      if (memory[arg] !== undefined){
-        return memory[arg];
+    return function(){
+      var serialize = JSON.stringify(arguments);
+
+      if (memory[serialize] === undefined){
+        memory[serialize] = func.apply(this, arguments);
       }
-      memory[arg] = func(arg);
-      return memory[arg];
+      return memory[serialize];
     };
   };
 
@@ -354,6 +355,21 @@ var _ = {};
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+    var results = [];
+    // debugger;
+    if( typeof iterator === "string" ){
+      var string = iterator;
+      iterator =  function(obj){
+        return obj[string];
+      };
+    }
+
+    return collection.sort(function(a, b){
+      if( iterator(a) > iterator(b) ){
+        return 1;
+      }
+      return -1;
+    });
   };
 
   // Zip together two or more arrays with elements of the same index
