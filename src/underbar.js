@@ -408,35 +408,40 @@ var _ = {};
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
   _.intersection = function() {
-    var hash = {};
-    var results = [];
+
+    var result = [];
     var args = Array.prototype.slice.call(arguments);
     args = _.sortBy(args, "length");
 
-    _.each(args[0], function(value) {
-      hash[value] = true;
-    });
-
-    _.each(hash, function(v, k){
-
-
-      _.each(args.slice(1), function(value) {
-        if( _.contains(value, k) === false ){
-          hash[k] = false;
-        }
+    var allContain = function (value){
+      return _.every(args.slice(1), function(v){
+        return _.contains(v, value);
       });
-  });
+    };
 
-    _.each(hash, function(value, key) {
-      value && results.push(key);
+    _.each(args[0], function(val, index){
+      allContain(val) && result.push(val);
     });
 
-    return results;
+    return result;
   };
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
   _.difference = function(array) {
+    var result = [];
+    var args = Array.prototype.slice.call(arguments);
+
+    var someContain = function (value){
+      return _.some(args.slice(1), function(v){
+        return _.contains(v, value);
+      });
+    };
+    _.each(args[0], function(val, index){
+      !someContain(val) && result.push(val);
+    });
+
+    return result;
   };
 
 
