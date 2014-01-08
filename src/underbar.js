@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 /*jshint eqnull:true, expr:true*/
 
 var _ = {};
@@ -460,4 +458,3 @@ var _ = {};
   };
 
 }).call(this);
->>>>>>> new
