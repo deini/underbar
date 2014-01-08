@@ -318,6 +318,7 @@ var _ = {};
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
     setTimeout.apply(this, arguments);
+
   };
 
 
@@ -455,6 +456,35 @@ var _ = {};
   //
   // See the Underbar readme for details.
   _.throttle = function(func, wait) {
+    var waiting = false;
+    var scheduled = false;
+    var args;
+    var last;
+
+    var waitFunc = function(){
+      waiting = true;
+      setTimeout(function(){
+          waiting = false;
+          if(scheduled){
+            last = func.apply(this, args);
+            scheduled = false;
+            waitFunc();
+          }
+        }, wait);
+    };
+
+    return function(){
+      //If we are not waiting, run func, set waiting to true, begin delay, and save the result in last
+      if(!waiting){
+        last = func.apply(this, arguments);
+        waitFunc();
+
+      } else { //if waiting is true set scheduled and save arguments
+        scheduled = true;
+        args = arguments;
+      }
+      return last;
+    };
   };
 
 }).call(this);
